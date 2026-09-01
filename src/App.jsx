@@ -1,17 +1,27 @@
-import Header from './components/Header'
-import Footer from "@/components/Footer.jsx";
+import Layout from "@/components/Layout.jsx";
 import Shop from "@/components/shop/Shop.jsx";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Home from "@/pages/Home.jsx";
+import SearchPage from "@/pages/SearchPage.jsx";
+import NotFoundPage from "@/pages/NotFound.jsx";
+import CosmeticItem from "@/components/cosmetics/CosmeticItem.jsx";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {index: true, element: <Home />},
+            {path: "shop", element: <Shop />},
+            {path: "cosmetics", element: <SearchPage />},
+            {path: "cosmetics/br/:id", element: <CosmeticItem />},
+            {path: "*", element: <NotFoundPage />},
+        ],
+    },
+])
 
 function App() {
-  return (
-    <>
-      <Header/>
-      <main className={"h-[calc(100vh-110px)] w-full flex flex-col justify-between items-center gap-1 md:gap-4 p-1 md:p-4 overflow-y-auto"}>
-        <Shop/>
-      </main>
-      <Footer/>
-    </>
-  )
+    return <RouterProvider router={router} />
 }
 
 export default App
