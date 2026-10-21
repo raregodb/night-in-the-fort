@@ -1,65 +1,50 @@
-import {useEffect, useState} from "react";
-import {getRecentShopItems} from "@/lib/api.js";
 import BrItem from "@/components/shop/BrItem.jsx";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs.jsx";
 import TrackItem from "@/components/shop/TrackItem.jsx";
 import InstrumentItem from "@/components/shop/InstrumentItem.jsx";
 import CarItem from "@/components/shop/CarItem.jsx";
+import {ErrorMessage, Loading} from "@/components/Status.jsx";
+import {useApi} from "@/hooks/use-api.js";
+import {getRecentShopItems} from "@/lib/api.js";
+import {Car, Guitar, Music, Shirt} from "lucide-react";
+
+const TABS = [
+    {value: "br", label: "Косметика", icon: Shirt, Item: BrItem},
+    {value: "tracks", label: "Треки", icon: Music, Item: TrackItem},
+    {value: "instruments", label: "Инструменты", icon: Guitar, Item: InstrumentItem},
+    {value: "cars", label: "Машины", icon: Car, Item: CarItem},
+];
 
 export default function RecentShopList () {
-    const [items, setItems] = useState(null);
+    const {data, error, loading} = useApi(getRecentShopItems);
 
-    useEffect(() => {
-        try {
-            getRecentShopItems().then((data) => {
-                setItems(data.data?.items);
-            });
-        }
-        catch (e) {
-            console.error(e);
-        }
-    }, []);
+    if (loading) return <Loading />;
+    if (error) return <ErrorMessage error={error} />;
+
+    const items = data?.items ?? {};
+    const tabs = TABS.filter((tab) => items[tab.value]?.length);
+
+    if (!tabs.length) return <span className="text-muted-foreground">Новинок пока нет</span>;
 
     return (
-        <div className={"flex flex-col h-full"}>
-            <Tabs defaultValue="overview" className="w-full">
+        <div className="flex w-full flex-col">
+            <Tabs defaultValue={tabs[0].value} className="w-full">
                 <TabsList>
-                    <TabsTrigger value="br">BR</TabsTrigger>
-                    <TabsTrigger value="tracks">Tracks</TabsTrigger>
-                    <TabsTrigger value="instruments">Instruments</TabsTrigger>
-                    <TabsTrigger value="cars">Cars</TabsTrigger>
+                    {tabs.map(({value, label, icon: Icon}) => (
+                        <TabsTrigger key={value} value={value}>
+                            <Icon />
+                            {label} ({items[value].length})
+                        </TabsTrigger>
+                    ))}
                 </TabsList>
-                {!items ? (
-                    <div>Loading...</div>
-                ) : (
-                    <>
-                        <TabsContent value="br">
-                            <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2"}>
-                                {items.br.map((item) => <BrItem key={item.id} item={item}/>)}
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="tracks">
-                            <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2"}>
-                                {items.tracks.map((item) => <TrackItem key={item.id} item={item}/>)}
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="instruments">
-                            <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2"}>
-                                {items.instruments.map((item) => <InstrumentItem key={item.id} item={item}/>)}
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="cars">
-                            <div className={"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-2"}>
-                                {items.cars.map((item) => <CarItem key={item.id} item={item}/>)}
-                            </div>
-                        </TabsContent>
-                    </>
-
-                )}
-
+                {tabs.map(({value, Item}) => (
+                    <TabsContent key={value} value={value}>
+                        <div className="grid grid-cols-2 gap-4 p-2 md:grid-cols-3 lg:grid-cols-4">
+                            {items[value].map((item) => <Item key={item.id} item={item}/>)}
+                        </div>
+                    </TabsContent>
+                ))}
             </Tabs>
-
-
         </div>
     );
 }

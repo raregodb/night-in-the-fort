@@ -1,85 +1,47 @@
-import {Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.jsx";
-import {Button} from "@/components/ui/button.jsx";
+import {Card, CardAction, CardDescription, CardHeader, CardTitle} from "@/components/ui/card.jsx";
 import RarityBadge from "@/components/RarityBadge.jsx";
-import {getRarity} from "@/lib/rarity";
-import {useMediaQuery} from "@/hooks/use-media-query";
+import ItemImage from "@/components/ItemImage.jsx";
+import WishlistButton from "@/components/WishlistButton.jsx";
 import {Link} from "react-router-dom";
 
 export default function BrItem(props) {
-    const {item, type} = props;
-
-    const smallSrc = item?.images?.smallIcon;
-    const largeSrc = item?.images?.icon;
-
-    const isDesktop = useMediaQuery("(min-width: 640px)");
-    const iconSrc = (isDesktop ? largeSrc : smallSrc) ?? largeSrc ?? smallSrc;
+    const {item, type, children} = props;
 
     if (!item || item.name === "null") return null;
 
-    const rarity = getRarity(item.rarity?.value);
+    const href = `/cosmetics/br/${item.id}`;
 
     if (type === "icon") {
         return (
-            <Link to={`/cosmetics/br/${item.id}`}>
-                <div className={`h-fit w-fit gap-0.5 relative mx-auto flex max-w-sm flex-col`}>
-                    {iconSrc ? (
-                        <img
-                            src={smallSrc}
-                            alt={`${item.name} Icon`}
-                            loading={"lazy"}
-                            decoding={"async"}
-                            className={`h-[100px] w-[100px] relative z-20 aspect-square object-cover`}
-                            style={{backgroundColor: rarity.color}}
-                        />
-                    ) : (
-                        <div className={`h-[100px] w-[100px] relative z-20 flex aspect-square items-center justify-center`}
-                             style={{backgroundColor: rarity.color}}>
-                            <span className={"text-2xl"}>Oops! No Icon</span>
-                        </div>
-                    )}
-                </div>
+            <Link to={href} title={item.name} className="block size-[100px]">
+                <ItemImage src={item.images?.smallIcon ?? item.images?.icon} alt={item.name} rarity={item.rarity?.value} />
             </Link>
         )
     }
 
     return (
-        <Link to={`/cosmetics/br/${item.id}`}>
-            <Card className={`${type === "s" ? "h-fit w-fit gap-0.5" : "h-full w-full"} relative mx-auto flex max-w-sm flex-col`}>
-                {iconSrc ? (
-                    <img
-                        src={type === "s" ? smallSrc : iconSrc}
-                        alt={`${item.name} Icon`}
-                        loading={"lazy"}
-                        decoding={"async"}
-                        className={`${type === "s" ? "h-[100px] w-[100px]" : "h-full w-full"} relative z-20 aspect-square object-cover`}
-                        style={{backgroundColor: rarity.color}}
-                    />
-                ) : (
-                    <div className={`${type === "s" ? "h-[100px] w-[100px]" : "h-full w-full"} relative z-20 flex aspect-square items-center justify-center`}
-                         style={{backgroundColor: rarity.color}}>
-                        <span className={"text-2xl"}>Oops! No Icon</span>
-                    </div>
-                )}
-
-                <CardHeader className={"w-full h-full p-0"}>
-                    {type !== "s" &&
-                        <CardAction>
-                            <RarityBadge type={item.rarity?.value} />
-                        </CardAction>
-                    }
-
+        <Card className="relative mx-auto flex h-full w-full max-w-sm flex-col">
+            <Link to={href} className="flex flex-1 flex-col gap-2">
+                <ItemImage
+                    src={item.images?.icon}
+                    smallSrc={item.images?.smallIcon}
+                    alt={item.name}
+                    rarity={item.rarity?.value}
+                    className="rounded-t-[min(var(--radius-4xl),24px)]"
+                />
+                <CardHeader>
+                    <CardAction>
+                        <RarityBadge type={item.rarity?.value} label={item.rarity?.displayValue} />
+                    </CardAction>
                     <CardTitle>{item.name}</CardTitle>
-                    {type !== "s" && <CardDescription>
+                    <CardDescription>
+                        {item.type?.displayValue && item.type.displayValue !== "null" ? `${item.type.displayValue} · ` : ""}
                         {item.description}
                     </CardDescription>
-                    }
-
                 </CardHeader>
-                {type !== "s" && <CardFooter className={"w-full h-full p-0"}>
-                    <Button className="w-full">View Event</Button>
-                </CardFooter>}
-
-            </Card>
-        </Link>
+            </Link>
+            <WishlistButton item={item} className="absolute top-2 right-2 z-30" />
+            {children}
+        </Card>
     )
 }

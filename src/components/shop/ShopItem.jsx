@@ -1,92 +1,45 @@
-import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card.jsx";
+import {Link} from "react-router-dom";
 import BrItem from "@/components/shop/BrItem.jsx";
-import InstrumentItem from "@/components/shop/InstrumentItem.jsx";
-import TrackItem from "@/components/shop/TrackItem.jsx";
-import CarItem from "@/components/shop/CarItem.jsx";
-import {useMediaQuery} from "@/hooks/use-media-query.js";
+import VbucksPrice from "@/components/VbucksPrice.jsx";
 import {getColors} from "@/lib/utils.js";
+import {getOfferImage, getOfferName, offerPath} from "@/lib/shop.js";
 
+export default function ShopItem({entry}) {
+    if (!entry) return null;
 
-export default function ShopItem (props) {
-    const {entry} = props;
-    const {layout} = entry;
-    const isDesktop = useMediaQuery("(min-width: 640px)");
-
-    if (!entry) return <div>Loading...</div>
-
-    if (entry.bundle) return (
-        <>
-            {layout.useWidePreview ? (
-                <div className={"w-full h-full"}>
-                    <span className={"absolute ml-6 top-2 w-full bg-accent bg-transparent-5"}>{entry.bundle?.name ?? "undef"}</span>
-                    <span className={"absolute ml-6 bottom-6 w-full"}> {entry.finalPrice}</span>
-                    <img src={entry.bundle?.image} className={"w-full h-full object-cover"}  alt={entry.bundle?.name + " banner"}/>
-                </div>
-
-            ) : (
-                <div className={"flex flex-col h-full w-full border-8"} style={{background: getColors(entry.colors), border: getColors(entry.colors, true)}}>
-                    <span className={"absolute ml-6 top-2 w-full bg-accent bg-transparent-5"}>{entry.bundle?.name ?? "undef"}</span>
-                    <span className={"absolute ml-6 bottom-6 w-full"}> {entry.finalPrice}</span>
-                    <div className={"flex ml-6 w-full h-full"}>
-                        {entry.brItems && entry.brItems.length > 1 && isDesktop && (
-                            <div className={"grid grid-cols-5 gap-2 w-full m-auto ml-2"}>
-                                {entry.brItems && (
-                                    entry.brItems.map((item) => (
-                                        <div className={" border-8 border-white h-fit w-fit hover:scale-110 transition-all-ease-in-out duration-300"}>
-                                            <BrItem key={item.id} item={item} type={"icon"} />
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        )}
-
-                        <img src={entry.bundle?.image} className={"w-full h-full object-contain z-10"}  alt={entry.bundle?.name + " banner"}/>
-
-                    </div>
-                </div>
-            )}
-        </>
-
-    )
+    const name = getOfferName(entry);
+    const image = getOfferImage(entry);
+    const items = entry.brItems ?? [];
+    const background = entry.colors?.color1 ? getColors(entry.colors) : undefined;
 
     return (
-        <div className={"flex flex-col h-full w-full border-8 border-white p-4"}>
-            <div>{layout?.name ?? "undef"}</div>
-            <div>{entry?.tileSize ?? "undef"}</div>
+        <div className="relative flex h-full w-full overflow-hidden rounded-2xl" style={{background}}>
+            <Link to={offerPath(entry.offerId)} className="absolute inset-0 z-10" aria-label={name} />
 
+            <div className="pointer-events-none absolute top-3 left-4 z-20 flex flex-col gap-1">
+                <span className="rounded-md bg-black/50 px-2 py-1 text-lg font-bold text-white md:text-2xl">{name}</span>
+                <span className="w-fit rounded-md bg-black/50 px-2 py-1 text-white">
+                    <VbucksPrice finalPrice={entry.finalPrice} regularPrice={entry.regularPrice} />
+                </span>
+            </div>
 
-            <div className={"flex w-full h-full"}>
-                <div className={"grid grid-cols-5 gap-2 w-full"}>
-                    {entry.brItems && (
-                        entry.brItems.map((item) => (
-                            <div className={" border-8 border-white p-4 h-fit w-fit hover:scale-110 transition-all-ease-in-out duration-300"}>
-                                <BrItem key={item.id} item={item} type={"icon"} />
-                            </div>
-                        ))
-                    )}
-                    {/*{entry.instruments && (*/}
-                    {/*    entry.instruments.map((item) => (*/}
-                    {/*        <InstrumentItem key={item.id} item={item} />*/}
-                    {/*    ))*/}
-                    {/*)}*/}
-                    {/*{entry.tracks && (*/}
-                    {/*    entry.tracks.map((item) => (*/}
-                    {/*        <TrackItem key={item.id} item={item} />*/}
-                    {/*    ))*/}
-                    {/*)}*/}
-                    {/*{entry.cars && (*/}
-                    {/*    entry.cars.map((item) => (*/}
-                    {/*        <CarItem key={item.id} item={item} />*/}
-                    {/*    ))*/}
-                    {/*)}*/}
+            {items.length > 1 && !entry.layout?.useWidePreview && (
+                <div className="relative z-20 m-auto ml-4 hidden max-w-[45%] grid-cols-3 gap-2 pt-20 sm:grid lg:grid-cols-5">
+                    {items.map((item) => (
+                        <div key={item.id} className="h-fit w-fit border-4 border-white transition-transform duration-300 hover:scale-110">
+                            <BrItem item={item} type="icon" />
+                        </div>
+                    ))}
                 </div>
+            )}
 
-
-            </div>
-
-            <div>
-                {entry.finalPrice}
-            </div>
+            {image && (
+                <img
+                    src={image}
+                    alt={name}
+                    className={`h-full w-full ${entry.layout?.useWidePreview ? "object-cover" : "object-contain"}`}
+                />
+            )}
         </div>
     )
 }

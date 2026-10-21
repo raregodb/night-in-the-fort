@@ -1,15 +1,16 @@
 import Header from "@/components/Header.jsx";
 import Footer from "@/components/Footer.jsx";
-import {Outlet} from "react-router-dom";
+import {Outlet, ScrollRestoration} from "react-router-dom";
 
-export default function Layout () {
+export default function Layout ({children}) {
     return (
-        <div className={"w-full h-full"}>
+        <div className={"flex min-h-screen w-full flex-col"}>
             <Header/>
-            <main className={"h-[calc(100vh-110px)] w-full flex flex-col justify-between items-center gap-1 md:gap-4 p-1 md:p-4 overflow-y-auto"}>
-                <Outlet/>
+            <main className={"w-full flex flex-1 flex-col items-center gap-1 md:gap-4 p-2 md:p-4"}>
+                {children ?? <Outlet/>}
             </main>
             <Footer/>
+            <ScrollRestoration/>
         </div>
     )
 }

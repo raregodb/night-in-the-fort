@@ -1,8 +1,8 @@
+import {EmptyState} from "@/components/Status.jsx";
+
 export default function NotFoundPage () {
 
     return (
-        <div className="w-full h-full flex flex-col">
-            <h2>Not Found :(</h2>
-        </div>
+        <EmptyState title="Страница не найдена :(" to="/" action="На главную" />
     )
 }

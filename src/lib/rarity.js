@@ -1,36 +1,36 @@
 export const RARITIES = {
     common: {
-        label: 'Common',
+        label: 'Обычный',
         color: 'var(--rarity-common)',
         className: 'rarity-common',
     },
     uncommon: {
-        label: 'Uncommon',
+        label: 'Необычный',
         color: 'var(--rarity-uncommon)',
         className: 'rarity-uncommon',
     },
     rare: {
-        label: 'Rare',
+        label: 'Редкий',
         color: 'var(--rarity-rare)',
         className: 'rarity-rare',
     },
     epic: {
-        label: 'Epic',
+        label: 'Эпический',
         color: 'var(--rarity-epic)',
         className: 'rarity-epic',
     },
     legendary: {
-        label: 'Legendary',
+        label: 'Легендарный',
         color: 'var(--rarity-legendary)',
         className: 'rarity-legendary',
     },
     mythic: {
-        label: 'Mythic',
+        label: 'Мифический',
         color: 'var(--rarity-mythic)',
         className: 'rarity-mythic',
     },
     icon: {
-        label: 'Icon',
+        label: 'Звёздная серия',
         color: 'var(--rarity-icon)',
         className: 'rarity-icon',
     },

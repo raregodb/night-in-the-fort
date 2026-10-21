@@ -1,6 +1,3 @@
-import * as React from "react"
-
-import { Card, CardContent } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
@@ -8,39 +5,31 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import {useEffect, useState} from "react";
-import {getShop} from "@/lib/api.js";
 import ShopItem from "@/components/shop/ShopItem.jsx";
 import Autoplay from "embla-carousel-autoplay";
+import {useShop} from "@/hooks/use-api.js";
+
+const autoplay = Autoplay({delay: 4000});
 
 export function BundleCarousel() {
-    const [shop, setShop] = useState(null);
-    const [itemsBySize, setItemsBySize] = useState({});
+    const {data: shop, error} = useShop();
 
-    useEffect(() => {
-        try {
-            getShop().then((data) => {
-                setShop(data.data);
-            });
-        }
-        catch (e) {
-            console.error(e);
-        }
-    }, []);
+    if (error) return null;
 
+    const bundles = shop?.entries.filter((entry) => entry.bundle) ?? [];
 
     return (
-        <Carousel opts={{loop: true}} plugins={[ Autoplay({
-            delay: 4000,
-        })]} className="w-full md:max-w-[85vw] h-full max-w-xs">
+        <Carousel opts={{loop: true}} plugins={[autoplay]} className="h-full w-full max-w-xs md:max-w-[85vw]">
             <CarouselContent>
                 {shop ? (
-                    shop.entries.filter((entry) => entry.bundle).map((entry) => (
-                        <CarouselItem key={entry.devName} className={"max-h-[40vh]"}>
+                    bundles.map((entry) => (
+                        <CarouselItem key={entry.offerId} className="h-[40vh]">
                             <ShopItem entry={entry} />
                         </CarouselItem>
                     ))
-                ) : <span>loading</span>}
+                ) : (
+                    <CarouselItem className="flex h-[40vh] items-center justify-center">Загрузка...</CarouselItem>
+                )}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
