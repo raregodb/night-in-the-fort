@@ -1,18 +1,30 @@
-# React + Vite
+# Night in the Fort
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Fortnite item shop browser: the current rotation, new items, cosmetics search, a cart and a wishlist. Data comes from [fortnite-api.com](https://fortnite-api.com).
 
-Currently, two official plugins are available:
+**Demo:** https://raregodb.github.io/night-in-the-fort/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- The shop is split into the same sections as in the game, and each offer has its own page with its V-Bucks price
+- New items: cosmetics, jam tracks, instruments, cars
+- Search by name with rarity and type filters
+- A cart that shows the total, and a wishlist, both saved in localStorage
+- Light and dark themes
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Stack
 
-Note: This will impact Vite dev & build performances.
+React 19, Vite, Tailwind CSS 4, shadcn/ui, React Router, Lucide
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+Create a `.env` file:
+
+```env
+VITE_PUBLIC_FORTNITE_URL=https://fortnite-api.com/v2/
+```
