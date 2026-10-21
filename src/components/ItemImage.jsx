@@ -22,7 +22,7 @@ export default function ItemImage({src, smallSrc, alt, rarity, className, sizes 
             alt={alt}
             loading="lazy"
             decoding="async"
-            className={cn("aspect-square w-full object-cover", className)}
+            className={cn("aspect-square w-full object-cover ", className)}
             style={{backgroundColor: background}}
         />
     )

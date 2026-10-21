@@ -13,14 +13,14 @@ export default function BrItem(props) {
 
     if (type === "icon") {
         return (
-            <Link to={href} title={item.name} className="block size-[100px]">
+            <Link to={href} title={item.name} className="block">
                 <ItemImage src={item.images?.smallIcon ?? item.images?.icon} alt={item.name} rarity={item.rarity?.value} />
             </Link>
         )
     }
 
     return (
-        <Card className="relative mx-auto flex h-full w-full max-w-sm flex-col">
+        <Card className="relative mx-auto flex h-full w-full max-w-sm flex-col pt-0">
             <Link to={href} className="flex flex-1 flex-col gap-2">
                 <ItemImage
                     src={item.images?.icon}

@@ -24,9 +24,9 @@ export default function ShopItem({entry}) {
             </div>
 
             {items.length > 1 && !entry.layout?.useWidePreview && (
-                <div className="relative z-20 m-auto ml-4 hidden max-w-[45%] grid-cols-3 gap-2 pt-20 sm:grid lg:grid-cols-5">
+                <div className="relative z-20 m-auto ml-4 gap-2 hidden w-full max-w-[45%] grid-cols-3 pt-20 sm:grid lg:grid-cols-5">
                     {items.map((item) => (
-                        <div key={item.id} className="h-fit w-fit border-4 border-white transition-transform duration-300 hover:scale-110">
+                        <div key={item.id} className="h-fit w-[100px] border-4 border-white transition-transform duration-300 hover:scale-110">
                             <BrItem item={item} type="icon" />
                         </div>
                     ))}

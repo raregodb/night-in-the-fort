@@ -41,7 +41,7 @@ export default function Header () {
                 {NAV.map(({to, label, icon: Icon, end}) => (
                     <NavLink key={to} to={to} end={end} aria-label={label}
                              className={({isActive}) => cn(
-                                 "flex items-center gap-1.5 text-base md:text-2xl font-bold transition-transform hover:scale-110",
+                                 "flex items-center gap-1.5 text-base md:text-2xl font-bold transition-transform hover:brightness-125",
                                  !isActive && "text-muted-foreground",
                              )}>
                         <Icon className="size-5 md:size-6" aria-hidden="true"/>
